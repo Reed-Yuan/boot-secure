@@ -1,7 +1,9 @@
 package com.reed.handson.bootsecurity.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Tolerate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -12,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-@NoArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -29,9 +31,6 @@ public class User {
 
     private String email;
 
-    public User(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
+    @Tolerate
+    public User() {}
 }

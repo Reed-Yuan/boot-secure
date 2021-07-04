@@ -1,14 +1,18 @@
 package com.reed.handson.bootsecurity.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Tolerate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 public class Transaction {
 
     @Id
@@ -22,7 +26,8 @@ public class Transaction {
 
     private String merchant;
 
-    private double amount;
+    @NotNull
+    private Double amount;
 
     @Column(insertable = true, updatable = false)
     private LocalDateTime created;
@@ -43,4 +48,7 @@ public class Transaction {
     void onUpdate() {
         this.setModified(LocalDateTime.now());
     }
+
+    @Tolerate
+    public Transaction() {}
 }

@@ -16,12 +16,12 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api")
-public class WebController {
+public class UserController {
 
     private final UserService userService;
 
     @Autowired
-    public WebController(final UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
 
