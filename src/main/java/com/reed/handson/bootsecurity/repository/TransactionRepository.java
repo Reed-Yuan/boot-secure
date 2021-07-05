@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
-    @Query("select t from Transaction t where t.spender.firstName = :firstname and t.spender.lastName = :lastname")
-    List<Transaction> findByUserName(@Param("firstname") String firstName, @Param("lastname") String lastName);
+    @Query("select t from Transaction t where t.spender.name = :name")
+    List<Transaction> findByUserName(@Param("name") String name);
 }

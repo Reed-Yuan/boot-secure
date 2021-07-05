@@ -1,5 +1,6 @@
 package com.reed.handson.bootsecurity.service;
 
+import com.jayway.jsonpath.internal.Utils;
 import com.reed.handson.bootsecurity.domain.Transaction;
 import com.reed.handson.bootsecurity.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class ReportingServiceImpl implements ReportingService {
     }
 
     @Override
-    public Iterable<Transaction> findTransactionsByUserName(final String firstName, final String lastName) {
-        return transactionRepository.findByUserName(firstName, lastName);
+    public Iterable<Transaction> findTransactionsByUserName(final String name) {
+        return transactionRepository.findByUserName(name);
     }
 }

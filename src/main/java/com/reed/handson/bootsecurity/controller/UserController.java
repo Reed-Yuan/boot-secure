@@ -42,10 +42,4 @@ public class UserController {
                 .buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
-
-    @ExceptionHandler
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ValidationError handleException(Exception exception) {
-        return new ValidationError(exception.getMessage());
-    }
 }

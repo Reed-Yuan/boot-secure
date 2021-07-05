@@ -1,19 +1,21 @@
 package com.reed.handson.bootsecurity.controller;
 
 import com.reed.handson.bootsecurity.domain.Transaction;
+import com.reed.handson.bootsecurity.domain.TransactionState;
 import com.reed.handson.bootsecurity.domain.User;
 import com.reed.handson.bootsecurity.service.ReportingService;
 import com.reed.handson.bootsecurity.service.TransactionService;
 import com.reed.handson.bootsecurity.service.UserService;
+import com.reed.handson.bootsecurity.validation.ValidationError;
 import com.reed.handson.bootsecurity.validation.ValidationErrorBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -30,37 +32,27 @@ public class TransactionController {
         this.reportingService = reportingService;
     }
 
+    @Autowired
+    private Validator validator;
 
     @GetMapping(value = "/debit")
-    public ResponseEntity<?> debit() {
-        User reed = User.builder().firstName("Reed").lastName("Yuan").build();
+    public ResponseEntity<?> debit(@RequestParam Double amount) {
+        User reed = User.builder().name("Reed").build();
         reed = userService.save(reed);
-        Transaction transaction = Transaction.builder().spender(reed).amount(100D).build();
+        Transaction transaction = Transaction.builder()
+                .spender(reed).amount(amount).state(TransactionState.NOT_PAID).build();
+        Set<ConstraintViolation<Transaction>> errors = validator.validate(transaction);
+        if (!errors.isEmpty()) {
+            return ResponseEntity.badRequest().
+                    body(ValidationErrorBuilder.fromValidationErrors(errors));
+        }
         transactionService.save(transaction);
-        return ResponseEntity.ok("Debit OK.");
-
+        return ResponseEntity.ok("Debit " + amount + " completed.");
     }
 
-    @GetMapping(value = "/report")
-    public Iterable<Transaction> report() {
-        User reed = User.builder().firstName("Reed").lastName("Yuan").build();
-        reed = userService.save(reed);
-        Transaction transaction = Transaction.builder().spender(reed).amount(100D).build();
-        transactionService.save(transaction);
-        return reportingService.findTransactionsByUserName("Reed", "Yuan");
-
+    @ExceptionHandler
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ValidationError handleException(Exception exception) {
+        return new ValidationError(exception.getMessage());
     }
-//    @PostMapping(value = "/debit")
-//    public ResponseEntity<?> debit(@Valid @RequestBody Transaction transaction, Errors errors) {
-//        if (errors.hasErrors()) {
-//            return ResponseEntity.badRequest().
-//                    body(ValidationErrorBuilder.fromBindingErrors(errors));
-//        }
-//        Transaction result = transactionService.save(transaction);
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().
-//                path("/{id}")
-//                .buildAndExpand(result.getId()).toUri();
-//        return ResponseEntity.created(location).build();
-//    }
-
 }
