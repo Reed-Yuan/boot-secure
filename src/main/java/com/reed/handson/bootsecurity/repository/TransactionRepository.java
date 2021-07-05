@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
-    @Query("select t from Transaction t where t.spender.name = :name")
-    List<Transaction> findByUserName(@Param("name") String name);
+    @Query("select t from Transaction t where t.spender.email = :email")
+    List<Transaction> findByEmail(@Param("email") String email);
+
+    @Query("select t from Transaction t where t.state = com.reed.handson.bootsecurity.domain.TransactionState.NOT_PAID")
+    List<Transaction> findAllUnPaid();
 }

@@ -16,6 +16,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(final String email) {
+        return userRepository.findByEmailIgnoreCase(email);
+    }
+
+    @Override
     public User save(User user) {
         return userRepository.save(user);
     }

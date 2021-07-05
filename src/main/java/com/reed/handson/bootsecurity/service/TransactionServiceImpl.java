@@ -5,6 +5,8 @@ import com.reed.handson.bootsecurity.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -18,6 +20,11 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction save(Transaction transaction) {
         return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public Optional<Transaction> findById(String id) {
+        return transactionRepository.findById(id);
     }
 
     @Override

@@ -2,10 +2,8 @@ package com.reed.handson.bootsecurity.controller;
 
 import com.reed.handson.bootsecurity.domain.User;
 import com.reed.handson.bootsecurity.service.UserService;
-import com.reed.handson.bootsecurity.validation.ValidationError;
 import com.reed.handson.bootsecurity.validation.ValidationErrorBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +14,11 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api")
-public class UserController {
-
-    private final UserService userService;
+public class UserController extends SecuredController {
 
     @Autowired
     public UserController(final UserService userService) {
-        this.userService = userService;
+        super(userService);
     }
 
     @GetMapping("/user")

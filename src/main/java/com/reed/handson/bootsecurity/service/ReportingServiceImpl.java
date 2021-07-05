@@ -1,10 +1,11 @@
 package com.reed.handson.bootsecurity.service;
 
-import com.jayway.jsonpath.internal.Utils;
 import com.reed.handson.bootsecurity.domain.Transaction;
 import com.reed.handson.bootsecurity.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReportingServiceImpl implements ReportingService {
@@ -17,7 +18,12 @@ public class ReportingServiceImpl implements ReportingService {
     }
 
     @Override
-    public Iterable<Transaction> findTransactionsByUserName(final String name) {
-        return transactionRepository.findByUserName(name);
+    public Iterable<Transaction> findTransactionsByEmail(final String email) {
+        return transactionRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<Transaction> findAllUnPaid() {
+        return transactionRepository.findAllUnPaid();
     }
 }

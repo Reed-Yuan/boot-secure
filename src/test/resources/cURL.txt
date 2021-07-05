@@ -1,0 +1,3 @@
+curl -u admin@boot.com:password -i -X POST -H "Content-Type: application/json" -d "{\"email\":\"user_01@boot.com\", \"password\":\"password\", \"enabled\":true, \"role\":\"USER\", \"name\":\"user_01\"}" http://localhost:8080/api/user
+
+curl -u user@boot.com:password -i -X POST -H "Content-Type: application/json" -d "{\"email\":\"user_01@boot.com\", \"password\":\"password\", \"enabled\":true, \"role\":\"USER\", \"name\":\"user_01\"}" http://localhost:8080/api/user
