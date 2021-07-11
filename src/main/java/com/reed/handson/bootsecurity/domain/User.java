@@ -6,9 +6,7 @@ import lombok.experimental.Tolerate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,6 +28,7 @@ public class User {
     @NotNull
     @NotBlank
     @Column(unique = true)
+    @Email(message = "is not a valid Email address")
     private String email;
 
     private boolean enabled = true;

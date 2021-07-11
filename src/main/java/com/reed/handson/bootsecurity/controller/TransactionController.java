@@ -35,7 +35,7 @@ public class TransactionController extends SecuredController {
     @Autowired
     private Validator validator;
 
-    @GetMapping(value = "/debit")
+    @PostMapping(value = "/debit")
     public ResponseEntity<?> debit(@RequestParam Double amount) {
 
         User user = getUser();
