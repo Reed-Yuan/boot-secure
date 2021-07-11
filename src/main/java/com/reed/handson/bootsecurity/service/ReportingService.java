@@ -1,11 +1,13 @@
 package com.reed.handson.bootsecurity.service;
 
 import com.reed.handson.bootsecurity.domain.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ReportingService {
-    Iterable<Transaction> findTransactionsByEmail(String email);
+    Page<Transaction> findTransactionsByEmail(final String email, final Pageable pageable);
     List<Transaction> findAllUnPaid();
-    List<Transaction> findUnPaidByEmail(final String email);
+    Page<Transaction> findUnPaidByEmail(final String email, final Pageable pageable);
 }
