@@ -3,6 +3,7 @@ package com.reed.handson.bootsecurity.controller;
 import com.reed.handson.bootsecurity.domain.User;
 import com.reed.handson.bootsecurity.service.UserService;
 import com.reed.handson.bootsecurity.validation.ValidationErrorBuilder;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -22,11 +23,13 @@ public class UserController extends SecuredController {
     }
 
     @GetMapping("/user")
+    @Operation(summary = "List all users, available for ADMIN or STAFF")
     public ResponseEntity<Iterable<User>> getUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
     @PostMapping(value = "/user")
+    @Operation(summary = "Create new user, available for ADMIN or STAFF")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().

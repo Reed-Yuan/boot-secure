@@ -7,4 +7,5 @@ import java.util.List;
 public interface ReportingService {
     Iterable<Transaction> findTransactionsByEmail(String email);
     List<Transaction> findAllUnPaid();
+    List<Transaction> findUnPaidByEmail(final String email);
 }

@@ -1,5 +1,6 @@
 package com.reed.handson.bootsecurity.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
@@ -23,6 +24,7 @@ public class User {
     @Size(min=2, max=10)
     private String name;
 
+    @JsonIgnore
     private String password;
 
     @NotNull

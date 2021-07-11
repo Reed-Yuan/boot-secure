@@ -26,4 +26,9 @@ public class ReportingServiceImpl implements ReportingService {
     public List<Transaction> findAllUnPaid() {
         return transactionRepository.findAllUnPaid();
     }
+
+    @Override
+    public List<Transaction> findUnPaidByEmail(final String email) {
+        return transactionRepository.findUnPaidByEmail(email);
+    }
 }

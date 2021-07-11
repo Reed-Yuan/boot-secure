@@ -14,4 +14,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 
     @Query("select t from Transaction t where t.state = com.reed.handson.bootsecurity.domain.TransactionState.NOT_PAID")
     List<Transaction> findAllUnPaid();
+
+    @Query("select t from Transaction t where t.state = com.reed.handson.bootsecurity.domain.TransactionState.NOT_PAID and t.spender.email = :email")
+    List<Transaction> findUnPaidByEmail(@Param("email") String email);
 }
