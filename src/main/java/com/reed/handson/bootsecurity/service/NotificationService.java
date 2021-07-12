@@ -26,12 +26,12 @@ public class NotificationService {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
     @Autowired
-    private ReportingService reportingService;
+    private TransactionService transactionService;
 
     @Async
     @Scheduled(fixedRate = 60000) // Every minute, could use Cron Expression
     public void scheduleFixedRateTaskAsync() throws InterruptedException {
-        List<Transaction> allUnPaid = reportingService.findAllUnPaid();
+        List<Transaction> allUnPaid = transactionService.findAllUnPaid();
         Map<User, List<Transaction>> byUser = allUnPaid.stream().collect(groupingBy(Transaction::getSpender));
         log.info("Scan database for unpaid transactions as of {}", dateFormat.format(new Date()));
         for (Map.Entry<User, List<Transaction>> each: byUser.entrySet()) {

@@ -4,18 +4,21 @@ import com.reed.handson.bootsecurity.domain.Transaction;
 import com.reed.handson.bootsecurity.domain.TransactionState;
 import com.reed.handson.bootsecurity.domain.User;
 import com.reed.handson.bootsecurity.domain.UserRole;
-import com.reed.handson.bootsecurity.service.ReportingService;
 import com.reed.handson.bootsecurity.service.TransactionService;
 import com.reed.handson.bootsecurity.service.UserService;
 import com.reed.handson.bootsecurity.validation.ValidationErrorBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,13 +27,11 @@ import java.util.Set;
 public class TransactionController extends SecuredController {
 
     private final TransactionService transactionService;
-    private final ReportingService reportingService;
 
     @Autowired
-    public TransactionController(TransactionService transactionService, UserService userService, ReportingService reportingService) {
+    public TransactionController(TransactionService transactionService, UserService userService) {
         super(userService);
         this.transactionService = transactionService;
-        this.reportingService = reportingService;
     }
 
     @Autowired
@@ -103,5 +104,30 @@ public class TransactionController extends SecuredController {
         }
     }
 
+    @GetMapping(value = "/ids")
+    @Operation(summary = "List transactions IDs of a particular user, a STAFF can list transactions of any user specified by 'email' parameter; Non-STAFF gets transactions IDs of his/her own")
+    public List<String> getTransactionId(@RequestParam(required = false) String email) {
+        User user = getUser();
+        if (user.getRole() == UserRole.STAFF) {
+            return transactionService.findIdByEmail(email == null ? user.getEmail() : email);
+        } else if (email != null && !email.equals(user.getEmail())) {
+            throw new AccessDeniedException("Not authorized");
+        } else {
+            return transactionService.findIdByEmail(user.getEmail());
+        }
+    }
+
+    @GetMapping(value = "/unpaid")
+    @Operation(summary = "List NOT_PAID transactions, a STAFF can list any user's; Non-STAFF can list his/her own")
+    public Page<Transaction> unpaid(@RequestParam(required = false) String email, Pageable pageable) {
+        User user = getUser();
+        if (user.getRole() == UserRole.STAFF) {
+            return transactionService.findUnPaidByEmail(email == null ? user.getEmail() : email, pageable);
+        } else if (email != null && !email.equals(user.getEmail())) {
+            throw new AccessDeniedException("Not authorized");
+        } else {
+            return transactionService.findUnPaidByEmail(user.getEmail(), pageable);
+        }
+    }
 
 }

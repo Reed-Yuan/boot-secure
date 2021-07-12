@@ -11,9 +11,8 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
-    @Query(value = "select t from Transaction t where t.spender.email = :email"
-            , countQuery = "SELECT count(*) from Transaction t where t.spender.email = :email")
-    Page<Transaction> findByEmail(@Param("email") String email, Pageable pageable);
+    @Query("select t.id from Transaction t where t.spender.email = :email")
+    List<String> findIdByEmail(@Param("email") String email);
 
     @Query("select t from Transaction t where t.state = com.reed.handson.bootsecurity.domain.TransactionState.NOT_PAID")
     List<Transaction> findAllUnPaid();
